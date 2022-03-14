@@ -25,7 +25,7 @@ app.get('/', (req, res) => {
 
 app.post('/', (req, res) => {
     console.log(req.body);
-    res.send('Posted babe!')
+    res.send('Posted babe!');
 })
 
 app.get('/admin/signup', (req, res) => {
