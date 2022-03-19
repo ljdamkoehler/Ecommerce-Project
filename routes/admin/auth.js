@@ -10,8 +10,6 @@ router.get('/signup', (req, res) => {
     res.send(signupTemplate({ req }));
 })
 
-
-
 router.post('/signup', async (req, res) => {
     const { email, password, passwordConfirmation } = req.body;
     const existingUser = await usersRepo.getOneBy({ email });
