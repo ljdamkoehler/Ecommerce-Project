@@ -10,8 +10,8 @@ const path = require('path');
 
 //We are not using ejs at this point in the project
 // app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, 'views'))
 
+app.use(express.static('public'));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieSession({
     keys: ['jpldze7815lxmsakja627g']
