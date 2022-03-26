@@ -14,6 +14,7 @@ const path = require('path');
 
 app.use(express.static('public'));
 app.use(bodyParser.urlencoded({ extended: true }));
+
 app.use(cookieSession({
     keys: ['jpldze7815lxmsakja627g']
 }))
