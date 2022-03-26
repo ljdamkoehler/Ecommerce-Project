@@ -4,6 +4,7 @@ const cookieSession = require('cookie-session');
 const usersRepo = require('./repositories/users')
 
 const authRouter = require('./routes/admin/auth');
+const productsRouter = require('./routes/admin/products');
 
 const app = express();
 const path = require('path');
@@ -18,6 +19,7 @@ app.use(cookieSession({
 }))
 
 app.use(authRouter);
+app.use(productsRouter);
 
 app.listen(3000, ()=> {
     console.log('App is listening on port 3000');
