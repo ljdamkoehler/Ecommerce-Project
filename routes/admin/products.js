@@ -1,7 +1,7 @@
 //***REQUIREMENTS***
 const express = require('express');
-const { validationResult } = require('express-validator')
 const multer = require('multer');
+const { handleErrors } = require('./middlewares');
 
 const router = express.Router();
 
@@ -26,14 +26,9 @@ router.get('/admin/products/new', (req, res) => {
 
 router.post('/admin/products/new', 
 upload.single('image'),
-[requireTitle, requirePrice],  
+[requireTitle, requirePrice],
+handleErrors(productsNewTemplate),  
 async (req, res) => {
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-        return res.send(productsNewTemplate({ errors }))
-    }
-
     const image = req.file.buffer.toString('base64');
     const { title, price } = req.body;
 

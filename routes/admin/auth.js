@@ -1,7 +1,6 @@
 const express = require('express');
 
-// Destructoring check from the express validator object.
-const { check, validationResult } = require('express-validator');
+const { handleErrors } = require('./middlewares');
 
 const usersRepo = require('../../repositories/users');
 const signupTemplate = require('../../views/admin/auth/signup');
@@ -21,14 +20,9 @@ router.get('/signup', (req, res) => {
 
 router.post(
     '/signup', 
-    [requireEmail, requirePassword, requirePasswordConfirmation], 
+    [requireEmail, requirePassword, requirePasswordConfirmation],
+    handleErrors(signupTemplate), 
     async (req, res) => {
-        const errors = validationResult(req);
-        
-        if(!errors.isEmpty()) {
-            return res.send(signupTemplate({ req, errors }));
-        } 
-        
         const { email, password, passwordConfirmation } = req.body;
         
         const user = await usersRepo.create({ email, password });
@@ -47,14 +41,9 @@ router.get('/signin', (req, res) => {
     res.send(signinTemplate({}));
 })
 
-router.post('/signin', [requireEmailExists, requireValidPasswordForUser], 
+router.post('/signin', [requireEmailExists, requireValidPasswordForUser],
+handleErrors(signinTemplate), 
 async (req, res) => {
-    const errors = validationResult(req);
-    
-    if (!errors.isEmpty()) {
-        return res.send(signinTemplate({ errors }));
-    }
-
     const { email } = req.body;
 
     const user = await usersRepo.getOneBy({ email });
