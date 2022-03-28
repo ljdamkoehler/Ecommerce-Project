@@ -10,7 +10,9 @@ const productsRepo = require('../../repositories/products');
 const { create } = require('../../repositories/users');
 const productsNewTemplate = require('../../views/admin/products/new');
 const productsIndexTemplate = require('../../views/admin/products/index')
+const productsEditTemplate = require('../../views/admin/products/edit')
 const { requireTitle, requirePrice } = require('./validators');
+const { getOne } = require('../../repositories/products');
 //*******
 
 // Product Index Route
@@ -38,5 +40,46 @@ async (req, res) => {
 
     res.redirect('/admin/products');
 })
+
+//Edit form route
+
+router.get('/admin/products/:id/edit', requireAuth, async (req, res) => {
+    const { id } = req.params;
+    const product = await productsRepo.getOne(id);
+
+    if (!product) {
+        return res.send('Product not found!');
+    }
+
+    res.send(productsEditTemplate({ product }));
+});
+
+//Edit product in the database route 
+
+router.post('/admin/products/:id/edit', 
+requireAuth, 
+upload.single('image'),
+[requireTitle, requirePrice], 
+handleErrors(productsEditTemplate, async (req) => {
+    const product = await productsRepo.getOne(req.params.id);
+    return { product }
+}),
+async (req, res) => {
+    const changes = req.body;
+
+    if(req.file) {
+        changes.image = req.file.buffer.toString('base64');
+    }
+
+    const { id } = req.params;
+    
+    try {
+        await productsRepo.update(id, changes);
+    } catch(e) {
+        return res.send('Could not find item')
+    }
+    
+    res.redirect('/admin/products')
+});
 
 module.exports = router;
