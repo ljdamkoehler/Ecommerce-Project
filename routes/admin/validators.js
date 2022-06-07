@@ -64,7 +64,7 @@ module.exports = {
             if (!validPassword) {
                 throw new Error('Invalid password');
             }
-        }),
+        })
 
     
 }
